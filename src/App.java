@@ -52,7 +52,7 @@ public class App extends Application {
             gameSize = startGameSize.getValue();
             turn = new SimpleObjectProperty<Character>();
             TicTacToePane ticTacToe = new TicTacToePane(gameSize);
-            Scene ticTacToeScene = new Scene(ticTacToe, 450, 170);
+            ticTacToeScene = new Scene(ticTacToe, 450, 170);
             turn.bind(ticTacToe.whoseTurn);
             turn.addListener(ov -> {
                 if (turn.get() == ' ') {
