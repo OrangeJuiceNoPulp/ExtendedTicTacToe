@@ -1,5 +1,7 @@
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.stage.Modality;
@@ -20,7 +22,9 @@ import javafx.scene.shape.Ellipse;
 public class App extends Application {
     private int gameSize;
     private char lastTurn;
-    Scene ticTacToeScene;
+    private Scene ticTacToeScene;
+    private TicTacToePane ticTacToeNew;
+    private ObjectProperty<Character> turn;
 
     @Override // Override the start method in the Application class
     public void start(Stage primaryStage) {
@@ -46,7 +50,7 @@ public class App extends Application {
 
         btnStartGame.setOnAction(e -> {
             gameSize = startGameSize.getValue();
-            ObjectProperty<Character> turn = new SimpleObjectProperty<Character>();
+            turn = new SimpleObjectProperty<Character>();
             TicTacToePane ticTacToe = new TicTacToePane(gameSize);
             Scene ticTacToeScene = new Scene(ticTacToe, 450, 170);
             turn.bind(ticTacToe.whoseTurn);
@@ -71,8 +75,8 @@ public class App extends Application {
                     Button btnNewGame = new Button("New Game");
                     btnNewGame.setOnAction(f -> {
                         gameSize = newGameSize.getValue();
-                        TicTacToePane ticTacToeNew = new TicTacToePane(gameSize);
                         turn.unbind();
+                        ticTacToeNew = new TicTacToePane(gameSize);
                         turn.bind(ticTacToeNew.whoseTurn);
                         ticTacToeScene.setRoot(ticTacToeNew);
                         gameOver.close();
@@ -276,10 +280,12 @@ public class App extends Application {
                     if (isWon(whoseTurn.get())) {
                         lblStatus.setText(whoseTurn.get() + " won! The game is over");
                         whoseTurn.set(' '); // Game is over
+
                     } else if (isFull()) {
                         lblStatus.setText("Draw! The game is over");
                         isDraw = true;
                         whoseTurn.set(' '); // Game is over
+
                     } else {
                         // Change the turn
                         if (whoseTurn.get() == 'X') {
